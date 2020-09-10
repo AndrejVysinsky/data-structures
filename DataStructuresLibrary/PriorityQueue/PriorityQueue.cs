@@ -37,6 +37,7 @@ public class PriorityQueue<TElement, TPriority> : IPriorityQueue<TElement, TPrio
 
     public TElement Pop()
     {
+        //create shallow copy of keys
         var keyCollection = new List<TPriority>(_sortedDictionary.Keys.ToList());
 
         foreach(var key in keyCollection)
@@ -52,5 +53,21 @@ public class PriorityQueue<TElement, TPriority> : IPriorityQueue<TElement, TPrio
         }
 
         throw new ArgumentOutOfRangeException();
+    }
+
+    /// <summary>
+    /// Returns number of elements
+    /// </summary>
+    public int Count()
+    {
+        return _sortedDictionary.Sum(q => q.Value.Count);
+    }
+
+    /// <summary>
+    /// Returns number of elements with same priority
+    /// </summary>
+    public int Count(TPriority priority)
+    {
+        return _sortedDictionary[priority].Count;
     }
 }

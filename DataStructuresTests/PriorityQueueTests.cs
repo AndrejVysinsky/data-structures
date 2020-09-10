@@ -52,6 +52,40 @@ namespace DataStructuresTests
         }
 
         [Fact]
+        public void TestCount()
+        {
+            var priorityQueue = new PriorityQueue<string, int>();
+
+            priorityQueue.Insert("key", 0);
+            priorityQueue.Insert("key", 0);
+            priorityQueue.Insert("key", 0);
+            priorityQueue.Insert("key", 1);
+            priorityQueue.Insert("key", 1);
+            priorityQueue.Insert("key", 2);
+            priorityQueue.Insert("key", 3);
+            priorityQueue.Insert("key", 4);
+            priorityQueue.Insert("key", 4);
+            priorityQueue.Insert("key", 4);
+
+            Assert.Equal(10, priorityQueue.Count());
+        }
+
+        [Fact]
+        public void TestCountPriority()
+        {
+            var priorityQueue = new PriorityQueue<string, int>();
+
+            priorityQueue.Insert("key", 0);
+            priorityQueue.Insert("key", 0);
+            priorityQueue.Insert("key", 0);
+            priorityQueue.Insert("key", 1);
+            priorityQueue.Insert("key", 1);
+
+            Assert.Equal(3, priorityQueue.Count(0));
+            Assert.Equal(2, priorityQueue.Count(1));
+        }
+
+        [Fact]
         public void TestQueueingOnSamePriorityReferenceType()
         {            
             var priorityQueue = new PriorityQueue<string, Distance>();
@@ -98,17 +132,12 @@ namespace DataStructuresTests
             public int CompareTo(Distance other)
             {
                 if (_distance < other._distance)
-                {
                     return -1;
-                }
-                else if (_distance > other._distance)
-                {
+
+                if (_distance > other._distance)
                     return 1;
-                }
-                else
-                {
-                    return 0;
-                }
+
+                return 0;
             }
         }
     }
