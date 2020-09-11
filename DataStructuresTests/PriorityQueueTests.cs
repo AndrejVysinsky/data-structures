@@ -1,128 +1,160 @@
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 using Xunit;
 
 namespace DataStructuresTests
 {
     public class PriorityQueueTests
     {
+        private const string _item1 = "item1";
+        private const string _item2 = "item2";
+        private const string _item3 = "item3";
+
         [Fact]
-        public void TestQueueingOnSamePriorityValueType()
+        public void Pop_ShouldWork()
         {
             var priorityQueue = new PriorityQueue<string, int>();
 
-            for (char i = 'a'; i <= 'z'; i++)
-            {
-                priorityQueue.Insert(i.ToString(), 1);
-            }
+            priorityQueue.Insert(_item1, 0);
 
-            for (char i = 'a'; i <= 'z'; i++)
-            {
-                Assert.Equal(i.ToString(), priorityQueue.Pop());
-            }
+            Assert.Equal(_item1, priorityQueue.Pop());
+        }
+
+        [Fact]
+        public void Pop_ShouldFail()
+        {
+            var priorityQueue = new PriorityQueue<string, int>();
 
             Assert.Throws<ArgumentOutOfRangeException>(() => priorityQueue.Pop());
         }
 
         [Fact]
-        public void TestDifferentPrioritiesValueType()
+        public void Peek_ShouldWork()
         {
             var priorityQueue = new PriorityQueue<string, int>();
 
-            int priority = 30;
-            for (char i = 'a'; i <= 'z'; i++)
-            {
-                priorityQueue.Insert(i.ToString(), priority--);
-            }
+            priorityQueue.Insert(_item1, 0);
 
-            for (char i = 'z'; i >= 'a'; i--)
-            {
-                Assert.Equal(i.ToString(), priorityQueue.Pop());
-            }
+            Assert.Equal(_item1, priorityQueue.Peek());
         }
 
         [Fact]
-        public void TestPeek()
+        public void Peek_ShouldFail()
         {
             var priorityQueue = new PriorityQueue<string, int>();
 
-            priorityQueue.Insert("key", 0);
-
-            Assert.Equal("key", priorityQueue.Peek());
+            Assert.Throws<ArgumentOutOfRangeException>(() => priorityQueue.Peek());
         }
 
         [Fact]
-        public void TestCount()
+        public void Count_ShouldWork()
         {
             var priorityQueue = new PriorityQueue<string, int>();
 
-            priorityQueue.Insert("key", 0);
-            priorityQueue.Insert("key", 0);
-            priorityQueue.Insert("key", 0);
-            priorityQueue.Insert("key", 1);
-            priorityQueue.Insert("key", 1);
-            priorityQueue.Insert("key", 2);
-            priorityQueue.Insert("key", 3);
-            priorityQueue.Insert("key", 4);
-            priorityQueue.Insert("key", 4);
-            priorityQueue.Insert("key", 4);
+            Assert.Equal(0, priorityQueue.Count());
 
-            Assert.Equal(10, priorityQueue.Count());
+            priorityQueue.Insert(_item1, 0);
+            priorityQueue.Insert(_item2, 1);
+            priorityQueue.Insert(_item3, 1);
+
+            Assert.Equal(3, priorityQueue.Count());
         }
 
         [Fact]
-        public void TestCountPriority()
+        public void CountByPriority_ShouldWork()
         {
             var priorityQueue = new PriorityQueue<string, int>();
 
-            priorityQueue.Insert("key", 0);
-            priorityQueue.Insert("key", 0);
-            priorityQueue.Insert("key", 0);
-            priorityQueue.Insert("key", 1);
-            priorityQueue.Insert("key", 1);
+            priorityQueue.Insert(_item1, 0);
+            priorityQueue.Insert(_item2, 1);
+            priorityQueue.Insert(_item3, 1);
 
-            Assert.Equal(3, priorityQueue.Count(0));
-            Assert.Equal(2, priorityQueue.Count(1));
+            Assert.Equal(1, priorityQueue.CountByPriority(0));
+            Assert.Equal(2, priorityQueue.CountByPriority(1));
         }
 
         [Fact]
-        public void TestQueueingOnSamePriorityReferenceType()
-        {            
+        public void CountByPriority_ShouldFail()
+        {
+            var priorityQueue = new PriorityQueue<string, int>();
+
+            priorityQueue.Insert(_item1, 0);
+
+            Assert.Throws<KeyNotFoundException>(() => priorityQueue.CountByPriority(1));
+        }
+
+        [Fact]
+        public void Clear_ShouldWork()
+        {
+            var priorityQueue = new PriorityQueue<string, int>();
+
+            priorityQueue.Insert(_item1, 0);
+
+            priorityQueue.Clear();
+
+            Assert.Equal(0, priorityQueue.Count());
+        }
+
+        [Fact]
+        public void Queueing_SamePriority_ValueType()
+        {
+            var priorityQueue = new PriorityQueue<string, int>();
+
+            priorityQueue.Insert(_item1, 0);
+            priorityQueue.Insert(_item2, 0);
+            priorityQueue.Insert(_item3, 0);
+
+            Assert.Equal(_item1, priorityQueue.Pop());
+            Assert.Equal(_item2, priorityQueue.Pop());
+            Assert.Equal(_item3, priorityQueue.Pop());
+        }
+
+        [Fact]
+        public void Queueing_SamePriority_ReferenceType()
+        {
             var priorityQueue = new PriorityQueue<string, Distance>();
 
-            for (char i = 'a'; i <= 'z'; i++)
-            {
-                priorityQueue.Insert(i.ToString(), new Distance(1));
-            }
+            priorityQueue.Insert(_item1, new Distance(0f));
+            priorityQueue.Insert(_item2, new Distance(0f));
+            priorityQueue.Insert(_item3, new Distance(0f));
 
-            for (char i = 'a'; i <= 'z'; i++)
-            {
-                Assert.Equal(i.ToString(), priorityQueue.Pop());
-            }
-
-            Assert.Throws<ArgumentOutOfRangeException>(() => priorityQueue.Pop());
+            Assert.Equal(_item1, priorityQueue.Pop());
+            Assert.Equal(_item2, priorityQueue.Pop());
+            Assert.Equal(_item3, priorityQueue.Pop());
         }
 
         [Fact]
-        public void TestDifferentPrioritiesReferenceType()
+        public void Queueing_DifferentPriority_ValueType()
+        {
+            var priorityQueue = new PriorityQueue<string, int>();
+
+            priorityQueue.Insert(_item2, 10);
+            priorityQueue.Insert(_item3, 20);
+            priorityQueue.Insert(_item1, 9);
+
+            Assert.Equal(_item1, priorityQueue.Pop());
+            Assert.Equal(_item2, priorityQueue.Pop());
+            Assert.Equal(_item3, priorityQueue.Pop());
+        }
+
+        [Fact]
+        public void Queueing_DifferentPriority_ReferenceType()
         {
             var priorityQueue = new PriorityQueue<string, Distance>();
 
-            float distance = 30;
-            for (char i = 'a'; i <= 'z'; i++)
-            {
-                priorityQueue.Insert(i.ToString(), new Distance(distance--));
-            }
+            priorityQueue.Insert(_item2, new Distance(10f));
+            priorityQueue.Insert(_item3, new Distance(20f));
+            priorityQueue.Insert(_item1, new Distance(9f));
 
-            for (char i = 'z'; i >= 'a'; i--)
-            {
-                Assert.Equal(i.ToString(), priorityQueue.Pop());
-            }
+            Assert.Equal(_item1, priorityQueue.Pop());
+            Assert.Equal(_item2, priorityQueue.Pop());
+            Assert.Equal(_item3, priorityQueue.Pop());
         }
+
 
         private class Distance : IComparable<Distance>
         {
-            private float _distance;
+            private readonly float _distance;
 
             public Distance(float distance)
             {

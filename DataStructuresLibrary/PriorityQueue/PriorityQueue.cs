@@ -66,8 +66,13 @@ public class PriorityQueue<TElement, TPriority> : IPriorityQueue<TElement, TPrio
     /// <summary>
     /// Returns number of elements with same priority
     /// </summary>
-    public int Count(TPriority priority)
+    public int CountByPriority(TPriority priority)
     {
         return _sortedDictionary[priority].Count;
+    }
+
+    public void Clear()
+    {
+        _sortedDictionary.Clear();
     }
 }
